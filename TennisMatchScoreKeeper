@@ -1,0 +1,347 @@
+// This is a quicly made project for an assigment at scool.
+
+import java.util.*;
+
+public class TennisMatchScoreKeeper
+/**Program Description:
+*This program keeps score for a
+*tennis match.The program gets input from the user which includes the two players last names (i.e.
+*Borg and McEnroe), the number of sets the match is out of (3 or 5), and the starting bias value.
+*The program then use random binary values (0 or 1) to determine which player won each
+*point that is played, where the random values are biased towards one player or the other. Note that
+*the bias value constantly shifts between the two players throughout the match, as one player gains
+*momentum in the match.
+*/
+
+
+{
+
+    public static void main(){
+        
+        
+        int sets, bias;
+        
+        int[] scores = {0,0,0,0,0,0}; //player1, player2
+        int[] oldScores = {0,0,0,0,0,0}; //player1, player2
+        
+        
+        //Initiate scanner
+        Scanner userInput = new Scanner(System.in);
+        System.out.println("Please insert the names of the players one at a time \nFor player #1 ");
+        String player1 = userInput.nextLine();
+        
+        System.out.println("For player #2 ");
+        String player2 = userInput.nextLine();
+
+        
+        while(true){
+                
+                System.out.println("Please insert the number of total sets for the game, 3 or 5? ");
+                sets = Integer.valueOf(userInput.nextLine());
+                if((sets == 3) || (sets == 5)){
+                    break;
+                }
+                else{
+                    System.out.println("Invalid number, please try again! ");
+                }
+        }
+
+        
+        while(true){
+            
+            System.out.println("Please insert Bias between 0-100 ");
+            bias = Integer.valueOf(userInput.nextLine());
+            if((bias <= 100) && (bias >= 0)){
+                break;
+            }
+            else{
+                System.out.println("Bias out of range, please try again! ");
+            }
+        }
+        
+        System.out.println("Start of play - " + player1 + " vs " + player2 + " - best out of " + sets + " sets ");
+
+        
+        //Loop game
+        while((scores[2] + scores[5]) < sets){
+            
+            int digit = randomDigit(bias);
+            
+            for(int i = 0; i < scores.length; i++){
+                
+                oldScores[i] = scores[i];
+            }
+
+            scores = pointKeeper(digit, scores, player1, player2);
+            bias = biasKeeper(scores, oldScores, bias);
+            
+            
+        }
+        
+        //Congratulate winner
+        if(scores[2] < scores[5]){
+            System.out.println("Congratulations " + player2 + " you won the Match!!"); 
+        }
+        else{
+            System.out.println("Congratulations " + player1 + " you won the Match!!"); 
+        }
+        
+  
+        
+    }
+    
+    public static int randomDigit(int bias){
+        
+        int digit;
+        int random = (int)(Math.random()*100);
+        
+        if (random < bias){
+            digit = 1;  
+        }
+        else if(random >= bias){
+            digit = 0;
+        }
+        else{
+            digit = ((int)Math.random()*10)%2;
+        }
+        //Test
+        System.out.println("The digit is " + digit + " the bias is " + bias );
+        return digit;
+    }
+    // insert new method that will take the output of the point keeper and and based on the change ajust bias
+    
+    // Check if score change and addapt bias accordingly
+    public static int biasKeeper(int[] scores, int[] oldScores, int bias){
+        
+        //Iterate through players score
+        for(int i = 0; i < scores.length; i++){
+            
+            //If there is change in score
+            if (scores[i] == oldScores[i] +1){
+                
+                //If you won a point
+                if( i == 0){
+                    
+                    bias -= 1;
+                }else if(i == 3){
+                    
+                    bias +=1;
+                }
+                //If you won a set
+                else if( i == 1){
+                    
+                    bias += 2;
+                }
+                else if(i == 4){
+                    
+                    bias -=2;
+                }
+                //If you won a game
+                else if( i == 2){
+                    
+                    bias += 5;
+                }
+                else if(i == 5){
+                    
+                    bias -=5;
+                }
+            }
+        }
+        // If player2 lose advantage
+        if((scores[3] == oldScores[3]-1) && (scores[3] == 3)){
+            
+            bias -= 1;
+        }
+        //If player1 lose advantage
+        if((scores[0] == oldScores[0]-1) && (scores[0] == 3)){
+            
+            bias += 1;
+        }
+        //Check if bias within range
+        if(bias > 100){
+            
+            bias = 100;
+        }
+        //Check if bias within range
+        if(bias < 0){
+            
+            bias = 0;
+        }
+        
+        return bias;
+    }
+    
+    public static int[] pointKeeper(int digit, int[]scores, String player1, String player2){
+        
+        //If player1 gains point
+        if(digit == 0){
+            
+            System.out.print("Point " + player1);
+            // If player2 has 40 points and player1 reaches 40 points
+            if ((scores[3] == 3) && (scores[0] + 1 == 3)){
+                
+                scores[0] += 1;
+                System.out.println(" , Game score: Duece");
+            }
+            // If player 2 has advantage
+            else if( scores[3] == 4){
+                
+                scores[3] -= 1;
+                System.out.println(" , " + player2 + ", lost advantage. Game Score: Deuce");
+            }
+            // if player1 has advantage
+            else if(scores[0] == 4){
+                
+                //player 1 wins game
+                scores[0] = 0;
+                scores[1] += 1;
+                
+                //check if player1 win set
+                if(((scores[1] == 6) && (scores[4] < 5)) || (scores[1] == 7)){
+                    
+                    scores[3] = 0;
+                    scores[4] = 0;
+                    scores[1] = 0;
+                    scores[2] += 1;
+                    System.out.println(", Set " + player1 + " Set Score: " + scores[2] + " - " + scores[5]);
+                    
+                }
+                else{
+                    System.out.print(", Game " + player1);
+                    System.out.println("Game Score: " + scores[1] + " - " + scores[4]);
+                }
+            }
+            //If player 1 is 40 and player2 is 40.
+            else if((scores[0] == 3) && (scores[3] ==3)){
+                
+                scores[0] = 4;
+                System.out.println(" , "  + player1 + " gain advantage.");
+            }
+            else{
+                //Player1 wins point
+                scores[0] += 1;
+                //If player 1 has 40 and wins point
+                if ((scores[0] == 4) && (scores[3] < 4)){
+                    
+                    scores[0] = 0; //Set points to 0
+                    scores[3] = 0; //Set points to 0
+                    scores[1] += 1; // add one game
+                    //check if player2 win game
+                    if(((scores[1] == 6) && (scores[4] < 5)) || (scores[1] == 7)){
+                    
+                        scores[3] = 0;
+                        scores[4] = 0;
+                        scores[1] = 0;
+                        scores[2] += 1;
+                        System.out.println(" Set Score: " + scores[2] + " - " + scores[5]);
+                    }
+                    else{
+                    System.out.print(", game " + player1);
+                    System.out.println(" Game Score: " + scores[1] + " - " + scores[4]);
+                    }
+                }
+                //Print 
+                else{
+                    
+                    System.out.println(", Match Score: " + pointReturn(scores[0]) + " - " + pointReturn(scores[3]));
+                }
+            }
+
+
+        }//If player2 gain a point
+        else if(digit == 1){
+            
+            System.out.print("Point " + player2);
+            // If player1 has 40 points and player2 reaches 40 points
+            if ((scores[0] == 3) && (scores[3] + 1 == 3)){
+                                
+                scores[3] += 1;
+                System.out.println(" , Game score: Duece ");
+            }
+            // If player 1 has advantage
+            else if( scores[0] == 4){
+                
+                
+                scores[0] -= 1;
+                System.out.println(" , " + player1 + ", lost advantage. Game Score: Deuce");
+            }
+            //If player2 is 40 and player 1 is 40
+            else if((scores[0] == 3) && (scores[3] ==3)){
+                
+                scores[3] = 4;
+                System.out.println(" , "  + player2 + " gain advantage.");
+            }
+            // if player2 has advantage
+            else if(scores[3] == 4){
+                
+                //player 2 wins game
+                
+                scores[3] = 0;
+                scores[4] += 1;
+                
+                //check if player2 win set
+                if(((scores[4] == 6) && (scores[1] < 5)) || (scores[4] == 7)){
+                    
+                    scores[0] = 0;
+                    scores[1] = 0;
+                    scores[4] = 0;
+                    scores[5] += 1;
+                    System.out.println(", Set " + player2 + " Set Score: " + scores[2] + " - " + scores[5]);
+                }
+                else{
+                    
+                    System.out.print(", Game " + player2);
+                    System.out.println(" Game Score: " + scores[1] + " - " + scores[4]);
+                }
+            }
+            else{
+                //Player2 wins point
+                scores[3] += 1;
+                //If player 2 has 40 and wins point
+                if ((scores[3] == 4) && (scores[0] < 4)){
+                    
+                    scores[0] = 0; //Set points to 0
+                    scores[3] = 0; //Set points to 0
+                    scores[4] += 1; // add one set
+                    //check if player2 win game
+                    if(((scores[4] == 6) && (scores[1] < 5)) || (scores[4] == 7)){
+                    
+                        scores[0] = 0;
+                        scores[1] = 0;
+                        scores[4] = 0;
+                        scores[5] += 1;
+                        System.out.println(" Set Score: " + scores[2] + " - " + scores[5]);
+                    }
+                    else{
+                    System.out.println(" , game " + player2);
+                    System.out.println(" Game Score: " + scores[1] + " - " + scores[4]);
+                    }
+                }
+                else{
+
+                   System.out.println(", Match Score: " + pointReturn(scores[0]) + " - " + pointReturn(scores[3])); 
+                }
+            }
+        }
+        return scores;
+    }
+    
+    public static String pointReturn(int score){
+        String point;
+        point = "Love";
+        
+        if(score == 0){
+               point = "Love";
+           }else if(score == 1){
+               
+               point = "15";
+           }else if(score == 2){
+               
+               point = "30";
+           }else if(score == 3){
+               
+               point = "40";
+           }
+        return point;
+    }
+}
