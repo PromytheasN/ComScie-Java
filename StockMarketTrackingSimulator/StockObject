@@ -1,0 +1,141 @@
+import java.util.*;
+
+/**
+ * Stores the data for a single stock.  The data shown gives 4 
+ * instance variables to begin with:
+ * Stock symbol
+ * Stock stockstockName
+ * Stock startingstartingPrice
+ * Stock previousChange
+ * @Author Alexander K
+ * @Version 1.0
+ */
+
+public class StockObject{
+
+    //Instance Variables    
+    private String symbol;
+    private String stockName;
+    private double startingPrice;
+    private double previousChange;
+
+    private double currentChange;
+    private double currentPrice;
+    private double percentChange;
+
+    //Default no args Constructor 
+    public StockObject(){
+
+        this.symbol = "";
+        this.stockName = "";
+        this.startingPrice = -1.0;
+        this.previousChange = 0.0;
+
+        this.currentChange = previousChange;
+        this.currentPrice = startingPrice;
+        this.percentChange = currentPrice - startingPrice;
+
+    }
+
+    //Parameterized Constructor
+    public StockObject(String s, String sn, double sp, double pc){
+
+        this.symbol = s;
+        this.stockName = sn;
+        this.startingPrice = sp;
+        this.previousChange = pc;
+        
+        this.currentChange = this.previousChange;
+        this.currentPrice = this.startingPrice;
+        this.percentChange = ((this.currentPrice - this.startingPrice) 
+                                / this.startingPrice) * 100;
+    }
+
+    //Get/Set methods
+    public String getSymbol(){
+
+        return this.stockName;
+    }
+    public String getStockName(){
+
+        return this.symbol;
+    }
+    public double getStartingPrice(){
+
+        return this.startingPrice;
+    }
+    public double getPreviousChange(){
+
+        return this.previousChange;
+    }
+
+    public void setSymbol(String s){
+
+        this.symbol = s;
+    }
+    public void setStockName(String sn){
+
+        this.stockName = sn;
+    }
+    public void setStartingPrice(double sp){
+
+        this.startingPrice = sp;
+    }
+    public void setPreviousChange(double pc){
+
+        this.previousChange = pc;
+    }
+
+    //Tester method
+    public void test(){
+
+        System.out.println("Symbol: ■ " + symbol + 
+                            ", stockName: " + stockName +
+                            ", startingPrice: " + startingPrice +
+                            ", previousChange: " + previousChange +
+                            ", current price: " + currentPrice +
+                            ", current change: " + currentChange +
+                            ", percentage change: " + percentChange);
+    }
+
+    //Print my data
+    public void printTableEntry(){
+
+        //Print stock Symbol, name, currentprice, currentchange, percentage change formated
+        System.out.printf("  ■  %-5s %-40s %8.2f %+8.2f %+8.2f%%",
+                         symbol, stockName, currentPrice, currentChange, percentChange);
+        System.out.println();
+    }
+
+    public void upadateStock(){
+
+        double r;
+        double x = this.currentChange * 15000;
+        int randomNum = (int)(Math.random()*5 + 1); //Generate random int num between 1 and 5
+
+        if(x > 0){
+
+            //Generate a random num between 0 and x
+            r = (int)Math.floor(Math.random()*(x + 1));
+        }
+        else{
+    
+            //Generate a random num between x and 0
+            r = (int)Math.floor(Math.random()*(-x + 1) + x);
+        }
+
+        //make currentChange into a double with 4-decimal-places)
+        this.currentChange = (r - (x / randomNum)) / 10000; // (to make it back into a double with 4-decimal-places)
+        this.currentPrice = this.currentPrice + this.currentChange;
+        this.percentChange = ((this.currentPrice - this.startingPrice) / this.startingPrice)*100;
+        
+        
+    }
+
+    //Set current to starting price & current to previous change
+    public void closeOfTrading(){
+
+        this.startingPrice = this.currentPrice;
+        this.previousChange = this.currentChange;
+    }
+}
