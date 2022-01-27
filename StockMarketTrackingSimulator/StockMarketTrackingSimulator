@@ -1,0 +1,111 @@
+import java.util.*;
+
+/**
+ * Stimulates list of stocks change in value over daily cycles 
+ * @Author Alexander K
+ * @Version 1.0
+ * @date 26-1-2022
+ * @course XXXX
+ */
+
+public class StockMarketTrackingSimulator{
+
+    public static void main(String[] args){
+
+
+        // Initialize & populate stockObject arrayList
+        ArrayList<StockObject> stocks = stocksList();
+
+        Scanner userInput = new Scanner(System.in);
+        //Get number of days to be stimulated
+        System.out.println("For how many days would you like to stimulate this? ");
+        int totalDays = userInput.nextInt();
+
+        // Print original values of all 20 stocks
+        printOriginalValues(stocks);
+
+        // Simulate stocks for totalDays 
+        for(int i = 0; i < totalDays; i++){
+            
+            dayTrucker(i); //Print day of week
+
+            for(StockObject s : stocks){
+
+                s.upadateStock();            
+                s.printTableEntry();
+                s.closeOfTrading();
+            }
+            System.out.println("\n\n");
+        }
+    }
+
+    // Initialize & populate stockObject arrayList
+    public static ArrayList<StockObject> stocksList(){
+
+            //Initialize StockObjects
+            StockObject stock1 = new StockObject("F", "Ford Motor Company", 25.19, 0.17);
+            StockObject stock2 = new StockObject("BAC", "Bank of America", 47.91, -0.85);
+            StockObject stock3 = new StockObject("AAPL", "Apple Inc.", 173.07, 0.88);
+            StockObject stock4 = new StockObject("AMD", "Advanced Micro Devices, Inc.", 136.88, 4.14);
+            StockObject stock5 = new StockObject("AMC", "AMC Entertaiment Holdings, inc.", 20.57, -0.09);
+    
+            StockObject stock6 = new StockObject("T", "AT&T Inc.", 27.18, 0.38);
+            StockObject stock7 = new StockObject("WFC", "Wells Frago & Company", 58.06, 2.06);
+            StockObject stock8 = new StockObject("LVS", "Las Vegas Sands Corp.", 42.99, 5.33);
+            StockObject stock9 = new StockObject("ZNGA", "Zynga Inc.", 8.96, -0.10);
+            StockObject stock10 = new StockObject("BBD", "Banco Bradesco S.A.", 3.77, 0.07);
+    
+            StockObject stock11 = new StockObject("AAL", "American Airlines Group Inc.", 18.49, -0.85);
+            StockObject stock12 = new StockObject("ITUB", "Itaú Unibanco Holdings S.A.", 4.25, 0.02);
+            StockObject stock13 = new StockObject("JPM", "JPMorgan Chase & Co", 157.89, -10.34);
+            StockObject stock14 = new StockObject("SPCE", "Virgin Galactic Holdings, Inc.", 10.14, 0.11);
+            StockObject stock15 = new StockObject("PBR", "Petróleo Brasileiro S.A. Petrobras", 12.61, 3.67);
+    
+            StockObject stock16 = new StockObject("NVDA", "NVIDIA Corporation", 269.42, 3.67);
+            StockObject stock17 = new StockObject("MSFT", "Microsoft Corporation", 310.20, 5.40);
+            StockObject stock18 = new StockObject("C", "Citigroup Inc", 66.93, -0.85);
+            StockObject stock19 = new StockObject("NIO", "NIO Inc.", 30.95, 0.47);
+            StockObject stock20 = new StockObject("PLTR", "Palantir Technologies Inc.", 16.01, 0.00);
+            
+            //Initialize ArrayList and populate with stock objects
+            ArrayList<StockObject> stocks = new ArrayList<>(Arrays.asList(stock1, stock2, stock3, stock4,
+                                                                        stock5, stock6, stock7, stock8,
+                                                                        stock9, stock10, stock11, stock12,
+                                                                        stock13, stock14, stock15, stock16,
+                                                                        stock17, stock18, stock19, stock20));
+
+        return(stocks);
+    }
+
+    // Print original values of all 20 stocks
+    public static void printOriginalValues(ArrayList<StockObject> stocks){
+
+        System.out.println("The chosen stocks that are stimulated are: \n");
+        for(StockObject s : stocks){
+
+            s.printTableEntry();
+        }
+        System.out.println();
+    }
+
+    //Print corresponded day
+    public static void dayTrucker(int i){
+
+        if( i % 5 == 0){
+            System.out.printf("Monday day %d ", i + 1);
+        }
+        else if( i % 5 == 1){
+            System.out.printf("Tuesday day %d ", i + 1);
+        }
+        else if( i % 5 == 2){
+            System.out.printf("Wednesday day %d ", i + 1);
+        }
+        else if( i % 5 == 3){
+            System.out.printf("Thursday day %d ", i + 1);
+        }
+        else if( i % 5 == 4){
+            System.out.printf("Friday day %d", i + 1);
+        }
+        System.out.println("\n");
+    }
+}
